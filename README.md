@@ -1,6 +1,6 @@
 # ELD Trip Planner
 
-A full-stack app for planning truck trips with FMCSA HOS compliance, route maps, and auto-filled daily log sheets.
+A full-stack app for planning truck trips with FMCSA Hours of Service compliance, route maps, and auto-filled daily log sheets.
 
 Built as a **single deployable unit:**
 - **Backend:** Python 3.14 · Django 6 · Django REST Framework
@@ -11,7 +11,7 @@ Built as a **single deployable unit:**
 ```
 project-root/
 ├── config/              # Django settings, URLs, WSGI/ASGI
-├── drivers/             # Trip planner API + HOS engine
+├── drivers/             # Trip planner API + Hours of Service engine
 ├── src/                 # React app (TypeScript)
 ├── static/              # Built React SPA + assets (Django serves this)
 ├── manage.py

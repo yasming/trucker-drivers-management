@@ -4,7 +4,7 @@ Prefers the configured heavy-goods-vehicle profile so the route reflects
 truck-legal roads. Some ORS keys/regions return 404 for that profile, so the
 service can fall back to a configured profile to keep the planner usable.
 Returns the full geometry (for the map polyline) plus per-leg distance/duration,
-which the HOS engine consumes.
+which the Hours of Service engine consumes.
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 import requests
 from django.conf import settings
 
-from .hos import Leg
+from .hours_of_service import Leg
 
 METERS_PER_MILE = 1609.344
 

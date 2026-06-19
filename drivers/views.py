@@ -5,14 +5,14 @@ from .models import Trip
 from .serializers import TripInputSerializer, TripSerializer
 from .services import geocoding, routing
 from .services.geocoding import GeocodingError
-from .services.hos import plan_logs
+from .services.hours_of_service import plan_logs
 from .services.routing import RoutingError
 
 
 class TripViewSet(viewsets.ModelViewSet):
     """Plan trips and read back saved ones.
 
-    POST runs the pipeline (geocode -> route -> HOS engine), persists a Trip,
+    POST runs the pipeline (geocode -> route -> Hours of Service engine), persists a Trip,
     and returns the full result. GET lists/retrieves saved trips. Trips are
     immutable, so PUT/PATCH are not exposed.
     """

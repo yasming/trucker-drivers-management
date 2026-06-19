@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 
 from .models import Trip
 from .services.geocoding import GeocodingError
-from .services.hos import DRIVING, MAX_DRIVE_HOURS, Leg, plan_logs
+from .services.hours_of_service import DRIVING, MAX_DRIVE_HOURS, Leg, plan_logs
 from .services import routing
 from .services.routing import RouteResult
 
@@ -15,8 +15,8 @@ START = datetime(2026, 6, 19, 8, 0)
 # Rough LA -> Houston -> NYC geometry as [lon, lat] pairs.
 GEOM = [[-118.24, 34.05], [-95.37, 29.76], [-74.00, 40.71]]
 
-class HosEngineTests(TestCase):
-    """Unit tests for the pure HOS/ELD engine (no HTTP, no DB)."""
+class HoursOfServiceEngineTests(TestCase):
+    """Unit tests for the pure Hours of Service engine (no HTTP, no DB)."""
 
     def test_short_trip_is_one_day_with_pickup_and_dropoff(self):
         res = plan_logs([Leg(60, 1.0), Leg(120, 2.0)], GEOM, 0.0, START)
