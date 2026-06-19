@@ -1,23 +1,20 @@
 # ---- Python / Django ----
-backend/.venv/
+.venv/
 __pycache__/
 *.py[cod]
 *.sqlite3
 db.sqlite3
-backend/.env
+.env
 *.log
 
 # ---- Node / React ----
 node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
-frontend/.env.*.local
+dist/
+.env.local
+.env.*.local
 
 # ---- Editors / OS ----
 .vscode/
 .idea/
 .DS_Store
 *.swp
-
-.env
