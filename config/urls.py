@@ -52,5 +52,5 @@ if settings.DEBUG:
 
 # Catch-all: serve React SPA for client-side routing (must be last)
 urlpatterns += [
-    re_path(r'^(?!api/|static/|assets/).*$', spa_fallback, name='spa_fallback'),
+    re_path(r'^(?!api|static|assets).*$', spa_fallback, name='spa_fallback'),
 ]
