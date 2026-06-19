@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from .models import Trip
 
-
 class TripInputSerializer(serializers.Serializer):
     """Validates the four planner inputs from the client."""
 

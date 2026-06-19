@@ -7,11 +7,11 @@
 
 .app__header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .app__header h1 {
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .subtitle {
@@ -25,19 +25,13 @@
   background: var(--social-bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 1.25rem;
+  padding: 1.5rem;
 }
 
 .trip-form__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-@media (max-width: 720px) {
-  .trip-form__grid {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
+  gap: 1.1rem;
 }
 
 .trip-form label {
@@ -52,7 +46,8 @@
 .trip-form input {
   font: inherit;
   font-size: 1rem;
-  padding: 0.6rem 0.7rem;
+  min-height: 3rem;
+  padding: 0.8rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg);
@@ -88,20 +83,14 @@
 /* --- Summary --- */
 .summary {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 0.75rem;
   margin: 1.5rem 0;
 }
 
-@media (max-width: 900px) {
-  .summary {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 520px) {
   .summary {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 
@@ -113,7 +102,8 @@
 }
 
 .stat__value {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
+  line-height: 1.25;
   font-weight: 600;
   color: var(--text-h);
 }
@@ -330,7 +320,8 @@
 .location-picker input {
   font: inherit;
   font-size: 1rem;
-  padding: 0.6rem 2rem 0.6rem 0.7rem;
+  min-height: 3.2rem;
+  padding: 0.85rem 2.25rem 0.85rem 0.95rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg);

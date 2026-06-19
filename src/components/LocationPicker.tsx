@@ -29,15 +29,30 @@ export default function LocationPicker({
   const timerRef = useRef<ReturnType<typeof setTimeout>>(
     undefined as unknown as ReturnType<typeof setTimeout>,
   )
+  const selectedLabelRef = useRef(value)
+  const requestIdRef = useRef(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setInput(value)
+    selectedLabelRef.current = value
+  }, [value])
 
   // Debounced geocode search
   useEffect(() => {
     clearTimeout(timerRef.current)
+    const requestId = ++requestIdRef.current
     if (!input.trim()) {
       setSuggestions([])
       setOpen(false)
+      setError(null)
+      return
+    }
+    if (input === selectedLabelRef.current) {
+      setSuggestions([])
+      setOpen(false)
+      setLoading(false)
       setError(null)
       return
     }
@@ -52,13 +67,16 @@ export default function LocationPicker({
         )
         if (!res.ok) throw new Error('Geocoding failed')
         const data = await res.json()
-        setSuggestions(data.results || [])
-        setOpen(true)
+        if (requestId !== requestIdRef.current) return
+        const results = data.results || []
+        setSuggestions(results)
+        setOpen(results.length > 0)
       } catch (err: unknown) {
+        if (requestId !== requestIdRef.current) return
         setError(err instanceof Error ? err.message : 'Search failed')
         setSuggestions([])
       } finally {
-        setLoading(false)
+        if (requestId === requestIdRef.current) setLoading(false)
       }
     }, 300)
   }, [input])
@@ -78,6 +96,8 @@ export default function LocationPicker({
   }, [])
 
   function handleSelect(loc: Location) {
+    requestIdRef.current += 1
+    selectedLabelRef.current = loc.label
     setInput(loc.label)
     setSuggestions([])
     setOpen(false)
@@ -93,8 +113,15 @@ export default function LocationPicker({
           id={`location-${label}`}
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onFocus={() => input.trim() && setOpen(true)}
+          onChange={(e) => {
+            selectedLabelRef.current = ''
+            setInput(e.target.value)
+          }}
+          onFocus={() => {
+            if (suggestions.length > 0 && input !== selectedLabelRef.current) {
+              setOpen(true)
+            }
+          }}
           placeholder={placeholder}
           disabled={disabled}
           autoComplete="off"

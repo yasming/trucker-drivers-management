@@ -27,7 +27,7 @@ function App() {
   return (
     <main className="app">
       <header className="app__header">
-        <h1>🚚 ELD Trip Planner</h1>
+        <h1>Trip Planner</h1>
         <p className="subtitle">
           Enter a trip and get a routed map plus auto-filled FMCSA daily log sheets.
         </p>

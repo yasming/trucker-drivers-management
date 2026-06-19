@@ -13,7 +13,6 @@ START = datetime(2026, 6, 19, 8, 0)
 # Rough LA -> Houston -> NYC geometry as [lon, lat] pairs.
 GEOM = [[-118.24, 34.05], [-95.37, 29.76], [-74.00, 40.71]]
 
-
 class HosEngineTests(TestCase):
     """Unit tests for the pure HOS/ELD engine (no HTTP, no DB)."""
 
@@ -64,7 +63,6 @@ class HosEngineTests(TestCase):
                 self.assertLessEqual(stop["lat"], max(lats) + 0.01)
                 self.assertGreaterEqual(stop["lon"], min(lons) - 0.01)
                 self.assertLessEqual(stop["lon"], max(lons) + 0.01)
-
 
 class TripApiTests(TestCase):
     """Endpoint tests for /api/trips/ with geocoding/routing mocked out."""

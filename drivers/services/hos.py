@@ -100,10 +100,10 @@ def _haversine(a: list[float], b: list[float]) -> float:
 def _point_at(geometry: list, miles: float, total_miles: float) -> tuple:
     """Return ``(lat, lon)`` at ``miles`` along ``geometry`` (list of [lon, lat])."""
     if not geometry:
-        return (None, None)
+        return None, None
     if len(geometry) == 1:
         lon, lat = geometry[0][:2]
-        return (round(lat, 5), round(lon, 5))
+        return round(lat, 5), round(lon, 5)
 
     fraction = 0.0 if total_miles <= 0 else min(max(miles / total_miles, 0.0), 1.0)
     cumulative = [0.0]
@@ -117,10 +117,10 @@ def _point_at(geometry: list, miles: float, total_miles: float) -> tuple:
             t = 0.0 if seg_len <= 0 else (target - cumulative[i - 1]) / seg_len
             lon1, lat1 = geometry[i - 1][:2]
             lon2, lat2 = geometry[i][:2]
-            return (round(lat1 + (lat2 - lat1) * t, 5), round(lon1 + (lon2 - lon1) * t, 5))
+            return round(lat1 + (lat2 - lat1) * t, 5), round(lon1 + (lon2 - lon1) * t, 5)
 
     lon, lat = geometry[-1][:2]
-    return (round(lat, 5), round(lon, 5))
+    return round(lat, 5), round(lon, 5)
 
 
 # ---------------------------------------------------------------------------
