@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Trip(models.Model):
     """A planned trip: the user's inputs plus the computed route and ELD logs.
 
