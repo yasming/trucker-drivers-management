@@ -14,10 +14,10 @@ class GeocodingError(Exception):
     """Raised when a location cannot be resolved to coordinates."""
 
 
-def geocode(query: str) -> tuple[float, float, str]:
-    """Resolve ``query`` to ``(lat, lon, label)``.
+def search(query: str, limit: int = 5) -> list[tuple[float, float, str]]:
+    """Search for locations matching ``query``, return up to ``limit`` results.
 
-    ``label`` is the human-readable address ORS matched, useful for the UI.
+    Each result is ``(lat, lon, label)``.
     """
     if not settings.ORS_API_KEY:
         raise GeocodingError("ORS_API_KEY is not configured")
@@ -26,17 +26,28 @@ def geocode(query: str) -> tuple[float, float, str]:
     try:
         resp = requests.get(
             url,
-            params={"api_key": settings.ORS_API_KEY, "text": query, "size": 1},
+            params={"api_key": settings.ORS_API_KEY, "text": query, "size": limit},
             timeout=15,
         )
         resp.raise_for_status()
-    except requests.RequestException as exc:  # network/HTTP error
+    except requests.RequestException as exc:
         raise GeocodingError(f"Geocoding request failed: {exc}") from exc
 
     features = (resp.json() or {}).get("features") or []
-    if not features:
-        raise GeocodingError(f"No location found for '{query}'")
+    return [
+        (f["geometry"]["coordinates"][1], f["geometry"]["coordinates"][0],
+         f.get("properties", {}).get("label", query))
+        for f in features
+    ]
 
-    lon, lat = features[0]["geometry"]["coordinates"][:2]
-    label = features[0].get("properties", {}).get("label", query)
-    return (lat, lon, label)
+
+def geocode(query: str) -> tuple[float, float, str]:
+    """Resolve ``query`` to ``(lat, lon, label)``.
+
+    ``label`` is the human-readable address ORS matched, useful for the UI.
+    Returns the single best result.
+    """
+    results = search(query, limit=1)
+    if not results:
+        raise GeocodingError(f"No location found for '{query}'")
+    return results[0]

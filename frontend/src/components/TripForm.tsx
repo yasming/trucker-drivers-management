@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import type { TripInput } from '../api'
+import LocationPicker from './LocationPicker'
 
 interface Props {
   onPlan: (input: TripInput) => void
@@ -14,46 +15,46 @@ export default function TripForm({ onPlan, loading }: Props) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    if (!current || !pickup || !dropoff) {
+      alert('Please select all three locations')
+      return
+    }
     onPlan({
-      current_location: current.trim(),
-      pickup_location: pickup.trim(),
-      dropoff_location: dropoff.trim(),
+      current_location: current,
+      pickup_location: pickup,
+      dropoff_location: dropoff,
       current_cycle_used: Number(cycle) || 0,
     })
   }
 
+  const allSet = current && pickup && dropoff
+
   return (
     <form className="trip-form" onSubmit={handleSubmit}>
       <div className="trip-form__grid">
+        <LocationPicker
+          label="Current location"
+          placeholder="e.g. Los Angeles, CA or address"
+          value={current}
+          onSelect={(loc) => setCurrent(loc.label)}
+          disabled={loading}
+        />
+        <LocationPicker
+          label="Pickup location"
+          placeholder="e.g. Dallas, TX or address"
+          value={pickup}
+          onSelect={(loc) => setPickup(loc.label)}
+          disabled={loading}
+        />
+        <LocationPicker
+          label="Dropoff location"
+          placeholder="e.g. New York, NY or address"
+          value={dropoff}
+          onSelect={(loc) => setDropoff(loc.label)}
+          disabled={loading}
+        />
         <label>
-          Current location
-          <input
-            value={current}
-            onChange={(e) => setCurrent(e.target.value)}
-            placeholder="e.g. Los Angeles, CA"
-            required
-          />
-        </label>
-        <label>
-          Pickup location
-          <input
-            value={pickup}
-            onChange={(e) => setPickup(e.target.value)}
-            placeholder="e.g. Dallas, TX"
-            required
-          />
-        </label>
-        <label>
-          Dropoff location
-          <input
-            value={dropoff}
-            onChange={(e) => setDropoff(e.target.value)}
-            placeholder="e.g. New York, NY"
-            required
-          />
-        </label>
-        <label>
-          Current cycle used (hrs)
+          <span>Current cycle used (hrs)</span>
           <input
             type="number"
             min="0"
@@ -65,7 +66,7 @@ export default function TripForm({ onPlan, loading }: Props) {
           />
         </label>
       </div>
-      <button type="submit" disabled={loading}>
+      <button type="submit" disabled={loading || !allSet}>
         {loading ? 'Planning…' : 'Plan trip'}
       </button>
     </form>
