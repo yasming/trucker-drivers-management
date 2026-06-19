@@ -1,13 +1,13 @@
 from unittest.mock import Mock, patch
 
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, override_settings
 
 from drivers.services import routing
 
 from .fixtures import GEOM
 
 
-class RoutingServiceTests(TestCase):
+class RoutingServiceTests(SimpleTestCase):
     """Unit tests for ORS routing request behavior."""
 
     @override_settings(

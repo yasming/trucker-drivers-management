@@ -14,6 +14,7 @@ function App() {
   async function handlePlan(input: TripInput) {
     setLoading(true)
     setError(null)
+    setTrip(null)
     try {
       setTrip(await planTrip(input))
     } catch (err: unknown) {
@@ -34,6 +35,16 @@ function App() {
       </header>
 
       <TripForm onPlan={handlePlan} loading={loading} />
+
+      {loading && (
+        <section className="planning-state" aria-live="polite" aria-label="Planning trip">
+          <div className="planning-state__spinner" />
+          <div>
+            <strong>Planning trip</strong>
+            <p>Calculating the route, required stops, rests, and daily log sheets.</p>
+          </div>
+        </section>
+      )}
 
       {error && (
         <div className="error">

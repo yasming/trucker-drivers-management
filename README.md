@@ -34,10 +34,10 @@ python -m venv .venv
 
 # Install Node dependencies
 npm install
-
-# Run migrations
-.venv/bin/python manage.py migrate
 ```
+
+Planned trips are kept in process memory. No database setup or migrations are
+required; restarting Django clears stored trips.
 
 ## Development
 

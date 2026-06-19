@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from drivers.services.hours_of_service import (
     DRIVING,
@@ -10,7 +10,7 @@ from drivers.services.hours_of_service import (
 from .fixtures import GEOM, START
 
 
-class HoursOfServiceEngineTests(TestCase):
+class HoursOfServiceEngineTests(SimpleTestCase):
     """Unit tests for the pure Hours of Service engine."""
 
     def test_short_trip_is_one_day_with_pickup_and_dropoff(self):

@@ -80,6 +80,47 @@
   cursor: default;
 }
 
+/* --- Planning state --- */
+.planning-state {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 4.5rem;
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.planning-state strong {
+  display: block;
+  color: var(--text-h);
+  font-size: 0.95rem;
+}
+
+.planning-state p {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.planning-state__spinner {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 auto;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: planning-spin 0.8s linear infinite;
+}
+
+@keyframes planning-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* --- Summary --- */
 .summary {
   display: grid;

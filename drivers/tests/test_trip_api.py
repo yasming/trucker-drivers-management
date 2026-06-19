@@ -1,20 +1,21 @@
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 from rest_framework.test import APIClient
 
-from drivers.models import Trip
 from drivers.services.geocoding import GeocodingError
 from drivers.services.hours_of_service import Leg
 from drivers.services.routing import RouteResult
+from drivers.services.trip_store import clear_trips, list_trips
 
 from .fixtures import GEOM
 
 
-class TripApiTests(TestCase):
+class TripApiTests(SimpleTestCase):
     """Endpoint tests for /api/trips/ with geocoding/routing mocked out."""
 
     def setUp(self):
+        clear_trips()
         self.client = APIClient()
         self.payload = {
             "current_location": "Los Angeles, CA",
@@ -45,17 +46,21 @@ class TripApiTests(TestCase):
         self.assertGreaterEqual(len(data["days"]), 1)
         self.assertTrue(any(s["type"] == "start" for s in data["stops"]))
         self.assertTrue(any(s["type"] == "dropoff" for s in data["stops"]))
-        self.assertEqual(Trip.objects.count(), 1)
+        self.assertEqual(len(list_trips()), 1)
+
+        list_resp = self.client.get("/api/trips/")
+        self.assertEqual(list_resp.status_code, 200)
+        self.assertEqual(len(list_resp.json()), 1)
 
     def test_invalid_input_returns_400(self):
         resp = self.client.post(
             "/api/trips/", {"current_location": "LA"}, format="json"
         )
         self.assertEqual(resp.status_code, 400)
-        self.assertEqual(Trip.objects.count(), 0)
+        self.assertEqual(len(list_trips()), 0)
 
     @patch("drivers.services.geocoding.geocode", side_effect=GeocodingError("nope"))
     def test_geocoding_failure_returns_502(self, _mock_geocode):
         resp = self.client.post("/api/trips/", self.payload, format="json")
         self.assertEqual(resp.status_code, 502)
-        self.assertEqual(Trip.objects.count(), 0)
+        self.assertEqual(len(list_trips()), 0)
