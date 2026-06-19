@@ -1,5 +1,5 @@
 up:
-	.venv/bin/python manage.py runserver & npm run dev && wait
+	.venv/bin/python manage.py runserver & npm run build & npm run dev && wait
 
 down:
 	lsof -ti:8000 | xargs kill -9 2>/dev/null || true
@@ -7,3 +7,4 @@ down:
 
 tests:
 	.venv/bin/python manage.py test
+

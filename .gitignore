@@ -10,6 +10,7 @@ db.sqlite3
 # ---- Node / React ----
 node_modules/
 dist/
+static/assets/
 .env.local
 .env.*.local
 

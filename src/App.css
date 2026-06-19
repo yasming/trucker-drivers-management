@@ -60,6 +60,11 @@
   box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
+.trip-form input.trip-form__cycle-input {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.65rem;
+}
+
 .trip-form button {
   margin-top: 1rem;
   width: 100%;

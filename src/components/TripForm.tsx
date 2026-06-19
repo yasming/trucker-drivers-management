@@ -53,9 +53,10 @@ export default function TripForm({ onPlan, loading }: Props) {
           onSelect={(loc) => setDropoff(loc.label)}
           disabled={loading}
         />
-        <label>
+        <label className="trip-form__cycle">
           <span>Current cycle used (hrs)</span>
           <input
+            className="trip-form__cycle-input"
             type="number"
             min="0"
             max="70"
