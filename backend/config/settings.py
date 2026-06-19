@@ -144,3 +144,9 @@ CORS_ALLOWED_ORIGINS = env_list(
     "DJANGO_CORS_ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173",
 )
+
+
+# OpenRouteService — free geocoding + truck routing used by the trip planner.
+# Sign up for a free key at https://openrouteservice.org/dev/#/signup
+ORS_API_KEY = os.environ.get("ORS_API_KEY", "")
+ORS_BASE_URL = os.environ.get("ORS_BASE_URL", "https://api.openrouteservice.org")

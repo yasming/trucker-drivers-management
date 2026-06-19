@@ -1,79 +1,63 @@
-import { useEffect, useState } from 'react'
-import { fetchDrivers, type Driver } from './api'
+import { useState } from 'react'
+import { planTrip, type TripInput, type TripResult } from './api'
+import TripForm from './components/TripForm'
+import TripSummary from './components/TripSummary'
+import RouteMap from './components/RouteMap'
+import LogSheet from './components/LogSheet'
 import './App.css'
 
-const STATUS_LABELS: Record<Driver['status'], string> = {
-  available: 'Available',
-  on_trip: 'On trip',
-  off_duty: 'Off duty',
-}
-
 function App() {
-  const [drivers, setDrivers] = useState<Driver[]>([])
-  const [loading, setLoading] = useState(true)
+  const [trip, setTrip] = useState<TripResult | null>(null)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchDrivers()
-      .then(setDrivers)
-      .catch((err: unknown) =>
-        setError(err instanceof Error ? err.message : String(err)),
-      )
-      .finally(() => setLoading(false))
-  }, [])
+  async function handlePlan(input: TripInput) {
+    setLoading(true)
+    setError(null)
+    try {
+      setTrip(await planTrip(input))
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err))
+      setTrip(null)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <main className="app">
-      <header>
-        <h1>🚚 Truck Drivers Management</h1>
-        <p className="subtitle">Django + DRF API · React + Vite frontend</p>
+      <header className="app__header">
+        <h1>🚚 ELD Trip Planner</h1>
+        <p className="subtitle">
+          Enter a trip and get a routed map plus auto-filled FMCSA daily log sheets.
+        </p>
       </header>
 
-      {loading && <p>Loading drivers…</p>}
+      <TripForm onPlan={handlePlan} loading={loading} />
 
       {error && (
         <div className="error">
-          <p>Could not load drivers: {error}</p>
-          <p className="hint">
-            Make sure the Django backend is running on port 8000.
-          </p>
+          <strong>Could not plan trip.</strong> {error}
         </div>
       )}
 
-      {!loading && !error && drivers.length === 0 && (
-        <div className="empty">
-          <p>No drivers yet.</p>
-          <p className="hint">
-            Add one via the API at <code>/api/drivers/</code>.
-          </p>
-        </div>
-      )}
-
-      {drivers.length > 0 && (
-        <table className="drivers">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>License</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {drivers.map((driver) => (
-              <tr key={driver.id}>
-                <td>{driver.full_name}</td>
-                <td>{driver.email}</td>
-                <td>{driver.license_number}</td>
-                <td>
-                  <span className={`status status--${driver.status}`}>
-                    {STATUS_LABELS[driver.status]}
-                  </span>
-                </td>
-              </tr>
+      {trip && (
+        <>
+          <TripSummary trip={trip} />
+          <RouteMap trip={trip} />
+          <section className="logs">
+            <h2>Daily log sheets ({trip.days.length})</h2>
+            {trip.days.map((day, i) => (
+              <LogSheet
+                key={`${day.date}-${i}`}
+                day={day}
+                index={i}
+                from={trip.current_location}
+                to={trip.dropoff_location}
+              />
             ))}
-          </tbody>
-        </table>
+          </section>
+        </>
       )}
     </main>
   )
