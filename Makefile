@@ -1,5 +1,3 @@
-.PHONY: up down refresh-db
-
 up:
 	.venv/bin/python manage.py runserver & npm run dev && wait
 

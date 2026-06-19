@@ -3,8 +3,11 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
+  // In production builds, assets are served by Django under /static/.
+  // In dev, the Vite server serves them from the root so hot-reload works.
+  base: command === 'build' ? '/static/' : '/',
   build: {
     outDir: path.resolve(__dirname, './static'),
     emptyOutDir: true,
@@ -19,4 +22,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

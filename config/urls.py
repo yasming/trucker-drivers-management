@@ -42,15 +42,9 @@ urlpatterns = [
     path('api/health/', health, name='health'),
     path('api/geocode/', geocode, name='geocode'),
     path('api/', include('drivers.urls')),
-]
-
-# Serve static files in development (assets/, etc.)
-if settings.DEBUG:
-    urlpatterns += [
-        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-    ]
-
-# Catch-all: serve React SPA for client-side routing (must be last)
-urlpatterns += [
-    re_path(r'^(?!api|static|assets).*$', spa_fallback, name='spa_fallback'),
+    # Serve the built React assets (works with DEBUG on or off, since this is
+    # the single deployable unit that serves its own frontend).
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.FRONTEND_BUILD_DIR}),
+    # Catch-all: serve React's index.html for client-side routing (must be last).
+    re_path(r'^(?!api|static).*$', spa_fallback, name='spa_fallback'),
 ]
