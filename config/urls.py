@@ -5,8 +5,10 @@ The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
 """
 import os
+from django.conf import settings
 from django.http import JsonResponse, FileResponse
 from django.urls import include, path, re_path
+from django.views.static import serve
 
 from drivers.services import geocoding as geocoding_service
 
@@ -40,6 +42,15 @@ urlpatterns = [
     path('api/health/', health, name='health'),
     path('api/geocode/', geocode, name='geocode'),
     path('api/', include('drivers.urls')),
-    # Catch-all: serve React SPA for any non-API route (must be last)
-    re_path(r'^(?!api/).*$', spa_fallback, name='spa_fallback'),
+]
+
+# Serve static files in development (assets/, etc.)
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    ]
+
+# Catch-all: serve React SPA for client-side routing (must be last)
+urlpatterns += [
+    re_path(r'^(?!api/|static/|assets/).*$', spa_fallback, name='spa_fallback'),
 ]
