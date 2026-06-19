@@ -62,8 +62,33 @@ class RouteResult:
     legs: list[Leg]  # one Leg per consecutive pair of waypoints
 
 
-def route(waypoints: list[tuple[float, float]]) -> RouteResult:
-    """Route through ``waypoints`` (each ``(lat, lon)``)."""
+def _request_open_route_service_directions(
+    body: dict,
+    headers: dict,
+    profiles: list[str],
+) -> requests.Response:
+    last_exc: requests.RequestException | None = None
+    for index, profile in enumerate(profiles):
+        url = f"{settings.ORS_BASE_URL}/v2/directions/{profile}/geojson"
+        try:
+            resp = requests.post(url, json=body, headers=headers, timeout=30)
+            if resp.status_code == 404 and index < len(profiles) - 1:
+                continue
+            resp.raise_for_status()
+            return resp
+        except requests.RequestException as exc:
+            last_exc = exc
+            if getattr(getattr(exc, "response", None), "status_code", None) == 404 and index < len(profiles) - 1:
+                continue
+            raise _routing_error(exc) from exc
+
+    if last_exc is not None:
+        raise _routing_error(last_exc) from last_exc
+    raise RoutingError("No routing profiles are configured")
+
+
+def get_open_route_service_route(waypoints: list[tuple[float, float]]) -> RouteResult:
+    """Get an OpenRouteService route through ``waypoints`` as ``(lat, lon)``."""
     if not settings.ORS_API_KEY:
         raise RoutingError("ORS_API_KEY is not configured")
 
@@ -77,25 +102,7 @@ def route(waypoints: list[tuple[float, float]]) -> RouteResult:
         "Authorization": settings.ORS_API_KEY,
         "Content-Type": "application/json",
     }
-    last_exc: requests.RequestException | None = None
-    resp = None
-    for index, profile in enumerate(profiles):
-        url = f"{settings.ORS_BASE_URL}/v2/directions/{profile}/geojson"
-        try:
-            resp = requests.post(url, json=body, headers=headers, timeout=30)
-            if resp.status_code == 404 and index < len(profiles) - 1:
-                continue
-            resp.raise_for_status()
-            break
-        except requests.RequestException as exc:
-            last_exc = exc
-            if getattr(getattr(exc, "response", None), "status_code", None) == 404 and index < len(profiles) - 1:
-                continue
-            raise _routing_error(exc) from exc
-    else:
-        if last_exc is not None:
-            raise _routing_error(last_exc) from last_exc
-        raise RoutingError("No routing profiles are configured")
+    resp = _request_open_route_service_directions(body, headers, profiles)
 
     features = (resp.json() or {}).get("features") or []
     if not features:

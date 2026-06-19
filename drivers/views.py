@@ -30,7 +30,7 @@ class TripViewSet(viewsets.ModelViewSet):
             current = geocoding.geocode(data["current_location"])
             pickup = geocoding.geocode(data["pickup_location"])
             dropoff = geocoding.geocode(data["dropoff_location"])
-            route_result = routing.route(
+            route_result = routing.get_open_route_service_route(
                 [
                     (current[0], current[1]),
                     (pickup[0], pickup[1]),

@@ -7,3 +7,6 @@ down:
 
 refresh-db:
 	rm -f db.sqlite3 && .venv/bin/python manage.py migrate
+
+tests:
+	.venv/bin/python manage.py test
