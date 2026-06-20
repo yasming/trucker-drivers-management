@@ -9,6 +9,10 @@ pickup location, dropoff location, and current cycle hours used, then produces:
 
 ![Trip Planner screenshot](docs/trip-planner-screenshot.png)
 
+[Video overview](https://www.loom.com/share/c1ed21aa097a4820807d7f61a2fb0bdb)
+
+[Live app](https://trucker-drivers-management-jsmwkjdfd-yasmings-projects.vercel.app/)
+
 ## Rules Source
 
 The Hours of Service behavior is based on the FMCSA driver guide included in
