@@ -98,7 +98,11 @@ Create a local `.env` file:
 
 ```bash
 ORS_API_KEY=your_openrouteservice_api_key_here
+DJANGO_DEBUG=True
 ```
+
+`DJANGO_DEBUG` defaults to `False` (production-safe), so set it to `True` for
+local development.
 
 In production (`DJANGO_DEBUG=False`), you must also set a unique, secret
 `DJANGO_SECRET_KEY`; the app refuses to start without it. Generate one with:

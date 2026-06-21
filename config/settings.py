@@ -36,7 +36,8 @@ def env_list(name: str, default: str = "") -> list[str]:
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool("DJANGO_DEBUG", True)
+# Defaults to off (production-safe); set DJANGO_DEBUG=True for local development.
+DEBUG = env_bool("DJANGO_DEBUG", False)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Require an explicit key in production; only fall back to an insecure,
