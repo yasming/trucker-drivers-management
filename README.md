@@ -100,6 +100,13 @@ Create a local `.env` file:
 ORS_API_KEY=your_openrouteservice_api_key_here
 ```
 
+In production (`DJANGO_DEBUG=False`), you must also set a unique, secret
+`DJANGO_SECRET_KEY`; the app refuses to start without it. Generate one with:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
 ## Setup
 
 ```bash
